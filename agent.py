@@ -16,14 +16,14 @@ class Agent:
         self.memory = Memory(self.memory_size)
 
         self.device = "cpu"
-        self.model = DQN(n_inputs=2 * self.n_bits).to(self.device)
-        self.target_model = DQN(n_inputs=2 * self.n_bits).to(self.device)
+        self.model = DQN(n_inputs=2 * self.n_bits, n_outputs=n_bits).to(self.device)
+        self.target_model = DQN(n_inputs=2 * self.n_bits, n_outputs=n_bits).to(self.device)
         self.target_model.load_state_dict(self.model.state_dict())
         self.target_model.eval()
         self.opt = Adam(self.model.parameters(), lr=self.lr)
         self.loss_fn = MSELoss()
         self.epsilon = 1.0
-        self.epsilon_decay = 0.01
+        self.epsilon_decay = 0.001
 
     def choose_action(self, states, goals):
 
@@ -32,13 +32,12 @@ class Agent:
         else:
             states = torch.Tensor(states, device=self.device)
             goals = torch.Tensor(goals, device=self.device)
-            action = self.model(states, goals).max(dim=-1)[1].detach().numpy()
-            action = np.clip(action, 0, self.n_bits)
+            action = self.model(states, goals).max(dim=-1)[1].item()
 
         return action
 
     def update_epsilon(self):
-        self.epsilon -= self.epsilon_decay
+        self.epsilon = max(self.epsilon - self.epsilon_decay, 0)
 
     def store(self, state, action, reward, done, next_state, goal):
         state = torch.Tensor(state, device=self.device)
@@ -54,7 +53,7 @@ class Agent:
         batch = Transition(*zip(*batch))
 
         states = torch.cat(batch.state).to(self.device).view(self.batch_size, self.n_bits)
-        actions = torch.cat(batch.action).to(self.device)
+        actions = torch.cat(batch.action).to(self.device).view((-1, 1))
         rewards = torch.cat(batch.reward).to(self.device)
         next_states = torch.cat(batch.next_state).to(self.device).view(self.batch_size, self.n_bits)
         dones = torch.cat(batch.done).to(self.device)
@@ -71,7 +70,7 @@ class Agent:
         with torch.no_grad():
             target_q = rewards + self.gamma * self.target_model(next_states, goals).max(-1)[0] * (1 - dones)
 
-        q = self.model(states, goals)[actions.long()]
+        q = self.model(states, goals).gather(1, actions.long())
         loss = self.loss_fn(q, target_q.view(self.batch_size, 1))
 
         self.opt.zero_grad()

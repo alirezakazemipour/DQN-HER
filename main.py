@@ -6,8 +6,8 @@ import numpy as np
 n_bits = 11
 lr = 1e-3
 gamma = 0.98
-MAX_EPISODE_NUM = 10000
-memory_size = 10000
+MAX_EPISODE_NUM = 100000
+memory_size = 1e+6
 batch_size = 128
 k_future = 4
 
@@ -44,7 +44,15 @@ if __name__ == "__main__":
                 agent.store(state, action, reward, done, next_state, new_goal)
 
         agent.update_epsilon()
-        if episode_num % 50 == 0:
+
+        if episode_num == 0:
+            global_running_r = episode_reward
+        else:
+            global_running_r = 0.99 * global_running_r + 0.01 * episode_reward
+        if episode_num % 1500 == 0:
             print(f"Ep:{episode_num}| "
                   f"Ep_r:{episode_reward:3.3f}| "
-                  f"Loss:{loss:3.3f}")
+                  f"Ep_running_r:{global_running_r:3.3f}| "
+                  f"Loss:{loss:3.3f}| "
+                  f"Epsilon:{agent.epsilon:3.3f}| "
+                  f"Mem_size:{len(agent.memory)}")
