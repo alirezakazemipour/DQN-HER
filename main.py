@@ -2,11 +2,12 @@ from bit_flip_env import Env
 from agent import Agent
 import random
 import numpy as np
+from torch.utils.tensorboard import SummaryWriter
 
-n_bits = 11
+n_bits = 25
 lr = 1e-3
 gamma = 0.98
-MAX_EPISODE_NUM = 100000
+MAX_EPISODE_NUM = 200000
 memory_size = 1e+6
 batch_size = 128
 k_future = 4
@@ -21,7 +22,9 @@ if __name__ == "__main__":
         episode_reward = 0
         episode = []
         done = False
+        step = 0
         while not done:
+            step += 1
             action = agent.choose_action(state, goal)
             next_state, reward, done, _ = env.step(action)
             agent.store(state, action, reward, done, next_state, goal)
@@ -55,4 +58,10 @@ if __name__ == "__main__":
                   f"Ep_running_r:{global_running_r:3.3f}| "
                   f"Loss:{loss:3.3f}| "
                   f"Epsilon:{agent.epsilon:3.3f}| "
-                  f"Mem_size:{len(agent.memory)}")
+                  f"Mem_size:{len(agent.memory)}| "
+                  f"step:{step}")
+
+        with SummaryWriter("./logs") as writer:
+            writer.add_scalar("Loss", loss, episode_num)
+            writer.add_scalar("Episode running reward", global_running_r, episode_num)
+            writer.add_scalar("Episode reward", episode_reward, episode_num)
