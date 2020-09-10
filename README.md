@@ -4,10 +4,10 @@ This repository contains the Pytorch implementation of Deep Q-Networks with hind
 numpy == 1.18.2  
 torch == 1.2.0  
 ## Hyper-parameters
-> n_bits -> Number of bits  
-> lr -> Learning rate  
-> gamma -> Discount factor  
-> k_future ->  
+> n_bits: Number of bits  
+> lr: Learning rate  
+> gamma: Discount factor  
+> k_future:  Number of episode for _future_ hindsight strategy  
 
 |  Parameter  |  Value  |
 | :---------: | :-----: |
@@ -21,3 +21,6 @@ torch == 1.2.0
 <p align="center">
 <img src="https://user-images.githubusercontent.com/32295763/77784113-e5e6ee00-7051-11ea-9359-b6feb30a3134.png" >
 </p>
+## Reference  
+1. [_Human-level control through deep reinforcement learning_, Mnih et al., 2015](https://www.nature.com/articles/nature14236)
+2. [_Hindsight Experience Replay_, Andrychowicz et al., 2017](https://arxiv.org/abs/1707.01495)  
