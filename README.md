@@ -1,6 +1,6 @@
 # DQN-HER
 This repository contains the Pytorch implementation of Deep Q-Networks with hindsight experience replay to solve the bit flip problem consisted of 25 bits.  
-The number of bits can be changed; 25 considered to be a difficult challenge. the original paper 
+The number of bits can be changed; 25 and more are considered to be slightly difficult challenges.   
 
 ## Dependencies
 numpy == 1.18.2  
