@@ -24,7 +24,8 @@ torch == 1.2.0
 <p align="center">
 <img src="https://user-images.githubusercontent.com/32295763/77784113-e5e6ee00-7051-11ea-9359-b6feb30a3134.png" >
 </p>  
-According to the plot when the problem is solved, at the worst case scenario, it takes 12 bits to be flipped by the agent in order to achieve the real, desired goal.
-## Reference  
+According to the plot when the problem is solved, at the worst case scenario, it takes 12 bits to be flipped by the agent in order to achieve the real, desired goal.  
+
+## Reference
 1. [_Human-level control through deep reinforcement learning_, Mnih et al., 2015](https://www.nature.com/articles/nature14236)  
 2. [_Hindsight Experience Replay_, Andrychowicz et al., 2017](https://arxiv.org/abs/1707.01495)  
