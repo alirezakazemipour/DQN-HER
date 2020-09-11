@@ -3,8 +3,8 @@ This repository contains the Pytorch implementation of Deep Q-Networks with hind
 The number of bits can be changed; 25 and more are considered to be slightly difficult challenges.   
 
 ## Dependencies
-numpy == 1.18.2  
-torch == 1.2.0  
+- numpy == 1.18.2  
+- torch == 1.2.0  
 ## Hyper-parameters
 > n_bits: Number of bits  
 > lr: Learning rate  
